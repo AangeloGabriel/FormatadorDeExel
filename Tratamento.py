@@ -254,8 +254,6 @@ def tratamento_lasa_site(arquivo):
     mapa_1 = criar_mapa("B", "C")
     mapa_2 = criar_mapa("B", "D")
     
-    print(mapa_1)
-    # print(mapa_2)
 
     for linha in range(2, ws_formatado.max_row + 1):
         ean = str(ws_formatado[f"D{linha}"].value).strip()
@@ -278,6 +276,69 @@ def tratamento_lasa_site(arquivo):
     ws_formatado = wb_principal[primeira_aba]  # Acessa a aba
     wb_principal.remove(ws_formatado)  # Remove a aba
 
+def tratamento_lasa_excel(arquivo):
+    global wb_principal
+    wb_base = load_workbook(caminho_arquivo_de_para)
+    ws_base = wb_base.active
+
+    wb_principal = load_workbook(arquivo)
+    ws_formatado = wb_principal.active
+
+    ws_formatado.delete_rows(1, 9)
+    ws_formatado.delete_cols(1)
+
+    colunas_a_deletar = [10,9,8,7,6,4]
+
+    for colunas in colunas_a_deletar:
+        ws_formatado.delete_cols(colunas)
+    
+    ws_formatado.insert_cols(2, 2)
+
+    ws_formatado['B1'], ws_formatado['C1'] = 'SKU GAMA', 'DESC GAMA'
+
+# # Criando mapeamento de valores
+    def criar_mapa(coluna_chave, coluna_valor):
+        mapa = {}
+        for linha in range(2, ws_base.max_row + 1):
+            chave = ws_base[f"{coluna_chave}{linha}"].value
+            valor = ws_base[f"{coluna_valor}{linha}"].value
+            if chave:
+                chave = str(chave).strip()
+                mapa[chave] = valor
+        return mapa
+    mapa_1 = criar_mapa("BD", "C")
+    mapa_2 = criar_mapa("BD", "D")
+    
+
+    linha = 2
+    while True:
+        valor_coluna_d = ws_formatado[f"A{linha}"].value
+        if valor_coluna_d is None or valor_coluna_d == "":  # Se estiver vazia, paramos
+            break
+
+        ean = str(ws_formatado[f"A{linha}"].value).strip()
+        ws_formatado[f"B{linha}"] = mapa_1.get(ean, "Não encontrado")
+        ws_formatado[f"C{linha}"] = mapa_2.get(ean, "Não encontrado")
+
+        linha += 1
+    
+    def copiar_sem_coluna(ws_origem, nome_aba, coluna_excluir):
+        ws_novo = wb_principal.create_sheet(title=nome_aba)
+        for row in ws_origem.iter_rows():
+            nova_linha = []
+            for i, cell in enumerate(row, start=1):
+                if i != coluna_excluir:  # Ignora a coluna desejada
+                    nova_celula = ws_novo.cell(row=cell.row, column=len(nova_linha) + 1, value=cell.value)
+                    nova_linha.append(cell.value)
+
+    ws_formatado.delete_cols(4)                
+
+    # Criar abas sem coluna G e M
+    copiar_sem_coluna(ws_formatado, "Venda", 4)
+    copiar_sem_coluna(ws_formatado, "Estoque", 5)
+    primeira_aba = wb_principal.sheetnames[0]  # Nome da primeira aba
+    ws_formatado = wb_principal[primeira_aba]  # Acessa a aba
+    wb_principal.remove(ws_formatado)  # Remove a aba
 ############## FUNCAO DO EXECUTAVEL ################
 
 def selecionar_arquivo():
@@ -297,8 +358,6 @@ def salvar_arquivo():
         except Exception as e:
             messagebox.showerror("Erro", f"Não foi possível salvar o arquivo: {e}")
 
-
-
 def selecionar():
     global arquivo 
     opcao = combo.get()
@@ -313,8 +372,10 @@ def selecionar():
         tratamento_havan_total(arquivo)
     elif opcao == "Havan_Parcial":
         tratamento_havan_parcial(arquivo)
-    elif opcao == "Lasa":
+    elif opcao == "Lasa_Csv":
         tratamento_lasa_site(arquivo)
+    elif opcao == "Lasa_Excel":
+        tratamento_lasa_excel(arquivo)
     
 
 ############### TELA DO EXECUTAVEL ################
@@ -328,7 +389,7 @@ botao_select.pack(pady=10, ipadx=10, ipady=5)
 label = tk.Label(root, text="Nenhum arquivo selecionado", font=("Arial", 10))
 label.pack(pady=10)
 
-opcoes = ['Havan_Total', 'Havan_Parcial', 'Lasa']
+opcoes = ['Havan_Total', 'Havan_Parcial', 'Lasa_Csv', 'Lasa_Excel']
 combo = ttk.Combobox(root, values=opcoes, font=("Arial", 10))
 combo.pack(pady=10)
 
