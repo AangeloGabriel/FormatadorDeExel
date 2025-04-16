@@ -339,6 +339,7 @@ def tratamento_lasa_excel(arquivo):
     primeira_aba = wb_principal.sheetnames[0]  # Nome da primeira aba
     ws_formatado = wb_principal[primeira_aba]  # Acessa a aba
     wb_principal.remove(ws_formatado)  # Remove a aba
+
 ############## FUNCAO DO EXECUTAVEL ################
 
 def selecionar_arquivo():
@@ -377,7 +378,6 @@ def selecionar():
     elif opcao == "Lasa_Excel":
         tratamento_lasa_excel(arquivo)
     
-
 ############### TELA DO EXECUTAVEL ################
 root = tk.Tk()
 root.title("Formatador de arquivos")
