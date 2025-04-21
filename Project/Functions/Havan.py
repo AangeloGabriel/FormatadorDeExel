@@ -98,7 +98,7 @@ def tratamento_havan_total(arquivo):
 
 def tratamento_havan_parcial(arquivo):
     global wb_principal
-    wb_base = load_workbook(caminho_arquivo_de_para)
+    wb_base = load_workbook(base)
     ws_base = wb_base.active
 
     wb_principal = load_workbook(arquivo)
@@ -165,11 +165,9 @@ def tratamento_havan_parcial(arquivo):
         ws_formatado[f"E{linha}"] = mapa_1.get(ws_formatado[f"D{linha}"].value, "Não encontrado")
         ws_formatado[f"F{linha}"] = mapa_2.get(ws_formatado[f"E{linha}"].value, "Não encontrado")
 
-    ws_formatado.delete_cols(4)
-    ws_formatado.delete_cols(6)
-    ws_formatado.delete_cols(6)
-    ws_formatado.delete_cols(6)
-    ws_formatado.delete_cols(6)
+    colunas_a_remover = [4, 6, 6, 6, 6]
+    for col in colunas_a_remover:
+        ws_formatado.delete_cols(col)   
 
 
     def copiar_sem_coluna(ws_origem, nome_aba, coluna_excluir):

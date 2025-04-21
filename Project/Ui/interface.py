@@ -11,10 +11,12 @@ def start_gui():
     botao_select = tk.Button(root, text="📂 Procurar arquivo", command=select)
     botao_select.pack(pady=10, ipadx=10, ipady=5)
 
+    global label
     label = tk.Label(root, text="Nenhum arquivo selecionado", font=("Arial", 10))
     label.pack(pady=10)
 
     opcoes = ['Havan_Total', 'Havan_Parcial', 'Lasa_Csv', 'Lasa_Excel']
+    global combo
     combo = ttk.Combobox(root, values=opcoes, font=("Arial", 10))
     combo.pack(pady=10)
 
@@ -22,6 +24,7 @@ def start_gui():
     botao_tratar = tk.Button(root, text="⚙️ Tratar", command=tratamento, bg="#4CAF50", fg="white", font=("Arial", 10, "bold"))
     botao_tratar.pack(pady=10, ipadx=10, ipady=5)
 
+    global label_resultado
     label_resultado = tk.Label(root, text="", font=("Arial", 10, "italic"))
     label_resultado.pack(pady=5)
 

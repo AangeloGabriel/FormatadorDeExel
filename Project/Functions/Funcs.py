@@ -3,7 +3,6 @@ import os
 
  
 def selecionar_arquivo():
-   
     global arquivo
     arquivo = filedialog.askopenfilename(title="Escolha um arquivo")
     nome_arquivo = os.path.basename(arquivo)
