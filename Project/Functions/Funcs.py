@@ -1,13 +1,14 @@
 from tkinter import filedialog, messagebox
 import os
-from Ui.interface import label, label_resultado, combo
-from Havan import tratamento_havan_parcial, tratamento_havan_total
 
+ 
 def selecionar_arquivo():
+   
     global arquivo
     arquivo = filedialog.askopenfilename(title="Escolha um arquivo")
     nome_arquivo = os.path.basename(arquivo)
-    label.config(text=f"Arquivo: {nome_arquivo}")
+    from ui.interface import label as lb
+    lb.config(text=f"Arquivo: {nome_arquivo}")
 
 def salvar_arquivo():
     global wb_principal  # Garante que a planilha tratada esteja acessível
@@ -22,20 +23,25 @@ def salvar_arquivo():
 
 def selecionar():
     global arquivo 
-    opcao = combo.get()
+    from ui.interface import combo as  cb
+    opcao = cb.get()
     if opcao is None or opcao == "":
-        label_resultado.config(text=f"Escolha um arquivo")
+        from ui.interface import label_resultado as lb
+        lb.config(text=f"Escolha um arquivo")
     else:
-        label_resultado.config(text=f"Tratado com sucesso!!")
-
+        from ui.interface import label_resultado as lb
+        lb.config(text=f"Tratado com sucesso!!")
     if opcao is None or opcao == "":
-        label_resultado.config(text="Escolha uma opção")
+        from ui.interface import label_resultado as lb
+        lb.config(text="Escolha uma opção")
     elif opcao == "Havan_Total":
-        tratamento_havan_total(arquivo)
+        from Functions.Havan import tratamento_havan_parcial as HavanParcial
+        HavanParcial(arquivo)
     elif opcao == "Havan_Parcial":
-        tratamento_havan_parcial(arquivo)
-    elif opcao == "Lasa_Csv":
-        tratamento_lasa_site(arquivo)
-    elif opcao == "Lasa_Excel":
-        tratamento_lasa_excel(arquivo)
+        from Functions.Havan import tratamento_havan_total as HavanTotal
+        HavanTotal(arquivo)
+    # elif opcao == "Lasa_Csv":
+    #     tratamento_lasa_site(arquivo)
+    # elif opcao == "Lasa_Excel":
+    #     tratamento_lasa_excel(arquivo)
     

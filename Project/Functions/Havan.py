@@ -1,10 +1,14 @@
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment
+from dotenv import load_dotenv
+import os 
 
+load_dotenv()
+base = os.getenv("CLIENTE_BASE")
 
 def tratamento_havan_total(arquivo):
     global wb_principal
-    wb_base = load_workbook(caminho_arquivo_de_para)
+    wb_base = load_workbook(base)
     ws_base = wb_base.active
 
     wb_principal = load_workbook(arquivo)
