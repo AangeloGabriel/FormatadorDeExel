@@ -2,9 +2,15 @@ from openpyxl import load_workbook
 from openpyxl.styles import Alignment
 from dotenv import load_dotenv
 import os 
+from pathlib import Path 
 
-load_dotenv()
+env_path = Path(__file__).resolve().parents[1] / 'Resources' / '.env'
+
+# Carrega as variáveis do .env
+load_dotenv(dotenv_path=env_path)
+
 base = os.getenv("CLIENTE_BASE")
+
 
 def tratamento_havan_total(arquivo):
     global wb_principal
