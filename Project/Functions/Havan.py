@@ -3,6 +3,9 @@ from openpyxl.styles import Alignment
 from dotenv import load_dotenv
 import os 
 from pathlib import Path 
+from Functions.Funcs import salvar_arquivo 
+import tempfile
+
 
 env_path = Path(__file__).resolve().parents[1] / 'Resources' / '.env'
 
@@ -102,6 +105,16 @@ def tratamento_havan_total(arquivo):
     ws_formatado = wb_principal[primeira_aba]  # Acessa a aba
     wb_principal.remove(ws_formatado)  # Remove a aba
 
+    # Cria o diretório "Tratado" dentro da pasta temporária do Windows
+    temp_dir = os.path.join(tempfile.gettempdir(), "Tratado")
+    if not os.path.exists(temp_dir):
+        os.makedirs(temp_dir)
+
+    # Define o caminho do arquivo tratado dentro da pasta "Tratado"
+    temp_path = os.path.join(temp_dir, "arquivo_tratado.xlsx")
+    wb_principal.save(temp_path)
+    return temp_path
+
 def tratamento_havan_parcial(arquivo):
     global wb_principal
     wb_base = load_workbook(base)
@@ -191,3 +204,13 @@ def tratamento_havan_parcial(arquivo):
     primeira_aba = wb_principal.sheetnames[0]  # Nome da primeira aba
     ws_formatado = wb_principal[primeira_aba]  # Acessa a aba
     wb_principal.remove(ws_formatado)  # Remove a aba
+
+    # Cria o diretório "Tratado" dentro da pasta temporária do Windows
+    temp_dir = os.path.join(tempfile.gettempdir(), "Tratado")
+    if not os.path.exists(temp_dir):
+        os.makedirs(temp_dir)
+
+    # Define o caminho do arquivo tratado dentro da pasta "Tratado"
+    temp_path = os.path.join(temp_dir, "arquivo_tratado.xlsx")
+    wb_principal.save(temp_path)
+    return temp_path
