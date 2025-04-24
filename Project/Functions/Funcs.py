@@ -44,10 +44,10 @@ def selecionar():
     opcao = cb.get()
     if opcao is None or opcao == "":
         from ui.interface import label_resultado as lb
-        lb.config(text=f"Escolha um arquivo")
+        lb.config(text="Escolha um arquivo")
     else:
         from ui.interface import label_resultado as lb
-        lb.config(text=f"Tratado com sucesso!!")
+        lb.config(text="Tratado com sucesso!!")
     if opcao is None or opcao == "":
         from ui.interface import label_resultado as lb
         lb.config(text="Escolha uma opção")

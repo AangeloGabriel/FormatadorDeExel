@@ -1,9 +1,21 @@
+# Ambiente virtual
+.venv/
 venv/
+*.spec
+dist/
+build/
 __pycache__/
 *.pyc
 *.pyo
-*.spec
-build/
-dist/
-teste.py
-Venv
+*.pyd
+.mypy_cache/
+.pytest_cache/
+ruff_cache/
+.pre-commit/
+.vscode/
+.idea/
+*.log
+*.tmp
+*.bak
+*.db
+*.sqlite

@@ -16,7 +16,7 @@ def copiar_sem_coluna(ws_origem, nome_aba, coluna_excluir):
         nova_linha = []
         for i, cell in enumerate(row, start=1):
             if i != coluna_excluir:  # Ignora a coluna desejada
-                nova_celula = ws_novo.cell(row=cell.row, column=len(nova_linha) + 1, value=cell.value)
+                ws_novo.cell(row=cell.row, column=len(nova_linha) + 1, value=cell.value)
                 nova_linha.append(cell.value)
 
 def criar_mapa(coluna_chave, coluna_valor):
@@ -36,8 +36,7 @@ def tratamento_havan_total(arquivo):
             ws_formatado.delete_cols(col)
     
     global wb_principal
-    wb_base = load_workbook(base)
-    ws_base = wb_base.active
+    load_workbook(base)
 
     wb_principal = load_workbook(arquivo)
     ws_formatado = wb_principal.active
@@ -99,7 +98,7 @@ def tratamento_havan_total(arquivo):
             nova_linha = []
             for i, cell in enumerate(row, start=1):
                 if i != coluna_excluir:  # Ignora a coluna desejada
-                    nova_celula = ws_novo.cell(row=cell.row, column=len(nova_linha) + 1, value=cell.value)
+                    ws_novo.cell(row=cell.row, column=len(nova_linha) + 1, value=cell.value)
                     nova_linha.append(cell.value)
 
     # Criar abas sem coluna G e M
@@ -126,8 +125,7 @@ def tratamento_havan_parcial(arquivo):
             ws_formatado.delete_cols(col)
     
     global wb_principal
-    wb_base = load_workbook(base)
-    ws_base = wb_base.active
+    load_workbook(base)
 
     wb_principal = load_workbook(arquivo)
     ws_formatado = wb_principal.active
@@ -150,6 +148,7 @@ def tratamento_havan_parcial(arquivo):
             if cell.value is None or cell.value == "":
                 cell.value = cell_acima.value
     
+
     # Limpeza e organização de colunas
     ws_formatado.delete_rows(1, 4)
     ws_formatado.insert_cols(7, 2)
