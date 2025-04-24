@@ -8,12 +8,10 @@ import tempfile
 
 
 env_path = Path(__file__).resolve().parents[1] / 'Resources' / '.env'
-
 # Carrega as variáveis do .env
 load_dotenv(dotenv_path=env_path)
 
 base = os.getenv("CLIENTE_BASE")
-
 
 def tratamento_havan_total(arquivo):
     global wb_principal
@@ -44,6 +42,7 @@ def tratamento_havan_total(arquivo):
     # Limpeza e organização de colunas
     ws_formatado.delete_rows(1, 4)
     ws_formatado.insert_cols(7, 2)
+
     colunas_a_remover = [4, 8, 8, 9, 9, 9, 10, 10, 11, 11, 11]
     
     for col in colunas_a_remover:
