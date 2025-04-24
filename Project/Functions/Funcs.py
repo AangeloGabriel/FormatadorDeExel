@@ -3,7 +3,6 @@ import os
 import shutil
 import tempfile
 
-
 def selecionar_arquivo():
     global arquivo
     arquivo = filedialog.askopenfilename(title="Escolha um arquivo")
@@ -20,7 +19,6 @@ def salvar_arquivo():
             if os.path.isfile(caminho_completo):
                 tratado = caminho_completo
                 break  # para no primeiro arquivo encontrado
-
     if tratado:
         caminho_escolhido = filedialog.asksaveasfilename(defaultextension=".xlsx",
                                                          filetypes=[("Excel files", "*.xlsx")])
@@ -31,10 +29,7 @@ def salvar_arquivo():
                 os.remove(tratado)
             except Exception as e:
                 messagebox.showerror("Erro", f"Não foi possível salvar o arquivo: {e}")
-        
         shutil.rmtree(temp_dir)
-
-    
     else:
         print("Erro no tratado")
 
@@ -57,8 +52,3 @@ def selecionar():
     elif opcao == "Havan_Total":
         from Functions.Havan import tratamento_havan_total as HavanTotal
         HavanTotal(arquivo)
-    # elif opcao == "Lasa_Csv":
-    #     tratamento_lasa_site(arquivo)
-    # elif opcao == "Lasa_Excel":
-    #     tratamento_lasa_excel(arquivo)
-    
