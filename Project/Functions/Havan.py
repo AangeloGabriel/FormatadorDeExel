@@ -3,19 +3,38 @@ from openpyxl.styles import Alignment
 from dotenv import load_dotenv
 import os 
 from pathlib import Path 
-from Functions.Funcs import salvar_arquivo 
 import tempfile
 
-
 env_path = Path(__file__).resolve().parents[1] / 'Resources' / '.env'
-
-# Carrega as variáveis do .env
-load_dotenv(dotenv_path=env_path)
+load_dotenv(dotenv_path = env_path)
 
 base = os.getenv("CLIENTE_BASE")
 
+def copiar_sem_coluna(ws_origem, nome_aba, coluna_excluir):
+    ws_novo = wb_principal.create_sheet(title=nome_aba)
+    for row in ws_origem.iter_rows():
+        nova_linha = []
+        for i, cell in enumerate(row, start=1):
+            if i != coluna_excluir:  # Ignora a coluna desejada
+                nova_celula = ws_novo.cell(row=cell.row, column=len(nova_linha) + 1, value=cell.value)
+                nova_linha.append(cell.value)
+
+def criar_mapa(coluna_chave, coluna_valor):
+        wb_base = load_workbook(base)
+        ws_base = wb_base.active
+        mapa = {}
+        for linha in range(4, ws_base.max_row + 1):
+            chave = ws_base[f"{coluna_chave}{linha}"].value
+            valor = ws_base[f"{coluna_valor}{linha}"].value
+            if chave:
+                mapa[chave] = valor
+        return mapa
 
 def tratamento_havan_total(arquivo):
+    def deletar_coluna(list):
+        for col in list:
+            ws_formatado.delete_cols(col)
+    
     global wb_principal
     wb_base = load_workbook(base)
     ws_base = wb_base.active
@@ -44,10 +63,9 @@ def tratamento_havan_total(arquivo):
     # Limpeza e organização de colunas
     ws_formatado.delete_rows(1, 4)
     ws_formatado.insert_cols(7, 2)
-    colunas_a_remover = [4, 8, 8, 9, 9, 9, 10, 10, 11, 11, 11]
     
-    for col in colunas_a_remover:
-        ws_formatado.delete_cols(col)
+    deletar_coluna([4, 8, 8, 9, 9, 9, 10, 10, 11, 11, 11])
+
     ws_formatado['F3'], ws_formatado['G3'] = 'SKU GAMA', 'DESC GAMA'
     ws_formatado['L3'], ws_formatado['M3'] = 'Estoque Total', 'Venda Total'
     
@@ -63,18 +81,9 @@ def tratamento_havan_total(arquivo):
         v2 = ws_formatado[f"E{linha}"].value or ""
         ws_formatado[f"F{linha}"] = f"{v1} - {v2}" if v2 and v2 not in v1 else v1
     
-    ws_formatado.delete_cols(4)
-    ws_formatado.delete_cols(4)
+    deletar_coluna([4,4])
 
     # Criando mapeamento de valores
-    def criar_mapa(coluna_chave, coluna_valor):
-        mapa = {}
-        for linha in range(4, ws_base.max_row + 1):
-            chave = ws_base[f"{coluna_chave}{linha}"].value
-            valor = ws_base[f"{coluna_valor}{linha}"].value
-            if chave:
-                mapa[chave] = valor
-        return mapa
     mapa_1 = criar_mapa("K", "C")
     mapa_2 = criar_mapa("C", "D")
     
@@ -82,12 +91,7 @@ def tratamento_havan_total(arquivo):
         ws_formatado[f"E{linha}"] = mapa_1.get(ws_formatado[f"D{linha}"].value, "Não encontrado")
         ws_formatado[f"F{linha}"] = mapa_2.get(ws_formatado[f"E{linha}"].value, "Não encontrado")
 
-    ws_formatado.delete_cols(4)
-    ws_formatado.delete_cols(6)
-    ws_formatado.delete_cols(6)
-    ws_formatado.delete_cols(6)
-    ws_formatado.delete_cols(6)
-
+    deletar_coluna([4,6,6,6])
 
     def copiar_sem_coluna(ws_origem, nome_aba, coluna_excluir):
         ws_novo = wb_principal.create_sheet(title=nome_aba)
@@ -101,6 +105,7 @@ def tratamento_havan_total(arquivo):
     # Criar abas sem coluna G e M
     copiar_sem_coluna(ws_formatado, "Venda", 6)
     copiar_sem_coluna(ws_formatado, "Estoque", 7)
+
     primeira_aba = wb_principal.sheetnames[0]  # Nome da primeira aba
     ws_formatado = wb_principal[primeira_aba]  # Acessa a aba
     wb_principal.remove(ws_formatado)  # Remove a aba
@@ -116,6 +121,10 @@ def tratamento_havan_total(arquivo):
     return temp_path
 
 def tratamento_havan_parcial(arquivo):
+    def deletar_coluna(list):
+        for col in list:
+            ws_formatado.delete_cols(col)
+    
     global wb_principal
     wb_base = load_workbook(base)
     ws_base = wb_base.active
@@ -144,11 +153,9 @@ def tratamento_havan_parcial(arquivo):
     # Limpeza e organização de colunas
     ws_formatado.delete_rows(1, 4)
     ws_formatado.insert_cols(7, 2)
-    colunas_a_remover = [10,11,11,12,13,13]
     
-
-    for col in colunas_a_remover:
-        ws_formatado.delete_cols(col)
+    deletar_coluna([10,11,11,12,13,13])
+    
     ws_formatado['G3'], ws_formatado['H3'] = 'SKU GAMA', 'DESC GAMA'
     ws_formatado['M3'], ws_formatado['N3'] = 'Estoque Total', 'Venda Total'
     
@@ -164,19 +171,10 @@ def tratamento_havan_parcial(arquivo):
         v2 = ws_formatado[f"F{linha}"].value or ""
         ws_formatado[f"G{linha}"] = f"{v1} - {v2}" if v2 and v2 not in v1 else v1
     
-    ws_formatado.delete_cols(4)
-    ws_formatado.delete_cols(4)
-    ws_formatado.delete_cols(4)
+    deletar_coluna([4,4,4])
 
     # Criando mapeamento de valores
-    def criar_mapa(coluna_chave, coluna_valor):
-        mapa = {}
-        for linha in range(4, ws_base.max_row + 1):
-            chave = ws_base[f"{coluna_chave}{linha}"].value
-            valor = ws_base[f"{coluna_valor}{linha}"].value
-            if chave:
-                mapa[chave] = valor
-        return mapa
+    
     mapa_1 = criar_mapa("K", "C")
     mapa_2 = criar_mapa("C", "D")
     
@@ -184,23 +182,12 @@ def tratamento_havan_parcial(arquivo):
         ws_formatado[f"E{linha}"] = mapa_1.get(ws_formatado[f"D{linha}"].value, "Não encontrado")
         ws_formatado[f"F{linha}"] = mapa_2.get(ws_formatado[f"E{linha}"].value, "Não encontrado")
 
-    colunas_a_remover = [4, 6, 6, 6, 6]
-    for col in colunas_a_remover:
-        ws_formatado.delete_cols(col)   
-
-
-    def copiar_sem_coluna(ws_origem, nome_aba, coluna_excluir):
-        ws_novo = wb_principal.create_sheet(title=nome_aba)
-        for row in ws_origem.iter_rows():
-            nova_linha = []
-            for i, cell in enumerate(row, start=1):
-                if i != coluna_excluir:  # Ignora a coluna desejada
-                    nova_celula = ws_novo.cell(row=cell.row, column=len(nova_linha) + 1, value=cell.value)
-                    nova_linha.append(cell.value)
+    deletar_coluna([4, 6, 6, 6, 6])  
 
     # Criar abas sem coluna G e M
     copiar_sem_coluna(ws_formatado, "Venda", 6)
     copiar_sem_coluna(ws_formatado, "Estoque", 7)
+
     primeira_aba = wb_principal.sheetnames[0]  # Nome da primeira aba
     ws_formatado = wb_principal[primeira_aba]  # Acessa a aba
     wb_principal.remove(ws_formatado)  # Remove a aba
