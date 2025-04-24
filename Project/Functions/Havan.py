@@ -91,7 +91,7 @@ def tratamento_havan_total(arquivo):
         ws_formatado[f"E{linha}"] = mapa_1.get(ws_formatado[f"D{linha}"].value, "Não encontrado")
         ws_formatado[f"F{linha}"] = mapa_2.get(ws_formatado[f"E{linha}"].value, "Não encontrado")
 
-    deletar_coluna([4,6,6,6])
+    deletar_coluna([10,9,8,7,4,1])
 
     def copiar_sem_coluna(ws_origem, nome_aba, coluna_excluir):
         ws_novo = wb_principal.create_sheet(title=nome_aba)
@@ -103,8 +103,8 @@ def tratamento_havan_total(arquivo):
                     nova_linha.append(cell.value)
 
     # Criar abas sem coluna G e M
-    copiar_sem_coluna(ws_formatado, "Venda", 6)
-    copiar_sem_coluna(ws_formatado, "Estoque", 7)
+    copiar_sem_coluna(ws_formatado, "Venda", 5)
+    copiar_sem_coluna(ws_formatado, "Estoque", 6)
 
     primeira_aba = wb_principal.sheetnames[0]  # Nome da primeira aba
     ws_formatado = wb_principal[primeira_aba]  # Acessa a aba
