@@ -1,15 +1,13 @@
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment
-from dotenv import load_dotenv
 import os 
-from pathlib import Path 
 import tempfile
 
-env_path = Path(__file__).resolve().parents[1] / 'Resources' / '.env'
-load_dotenv(dotenv_path = env_path)
+# env_path = Path(__file__).resolve().parents[1] / 'Resources' / '.env'
+# load_dotenv(dotenv_path = env_path)
 
-base = os.getenv("CLIENTE_BASE")
-
+# base = os.getenv("CLIENTE_BASE")
+base = r"S:\S&OP e Produtos\Compartilhado\S&OP\Relatórios\Sell out Individual\Cópia de BASE DE-PARA CLIENTES SKU v9.xlsx"
 def copiar_sem_coluna(ws_origem, nome_aba, coluna_excluir):
     ws_novo = wb_principal.create_sheet(title=nome_aba)
     for row in ws_origem.iter_rows():
